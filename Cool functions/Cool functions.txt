@@ -18,3 +18,17 @@ end
 function crnd(min, max)
     return min + rnd(max-min)
 end
+
+-- Cool time manager
+
+function ctimemanager()
+    time.ms += 1/30
+    if (time.ms >= 1) then 
+        time.s += 1
+        time.ms = 0
+    if (time.s >= 60) then
+        time.m += 1
+        time.s = 0
+    end
+    end
+end
