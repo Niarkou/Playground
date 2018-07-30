@@ -1,14 +1,9 @@
 -- Cool Outlined print
 
 function coprint(text, x, y, color)
-    print(text, x, y+1, 1)
-    print(text, x, y-1, 1)
-    print(text, x-1, y-1, 1)
-    print(text, x+1, y+1, 1)
-    print(text, x-1, y, 1)
-    print(text, x+1, y, 1)
-
-    print(text, x, y, color or 7)
+    for i = -1,1 do
+        for j = -1,1 do
+            print(text, x+i, y+j, color or 7)
 end
 
 -- Cool print (centered)
