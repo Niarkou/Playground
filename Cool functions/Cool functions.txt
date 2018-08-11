@@ -4,6 +4,8 @@ function coprint(text, x, y, color)
     for i = -1,1 do
         for j = -1,1 do
             print(text, x+i, y+j, color or 7)
+        end
+    end
 end
 
 -- Cool print (centered)
