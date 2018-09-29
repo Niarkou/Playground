@@ -76,3 +76,9 @@ function ctostr(n, l)
     end
     return a
 end
+
+-- cool random
+
+function crnd(min, max)
+    return min + rnd(max-min)
+end
