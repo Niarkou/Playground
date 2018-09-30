@@ -83,7 +83,18 @@ function update_balls()
   end)
 
  --collision with each others
-
+  for i = 1, #balls do
+    for j = 1, #balls do
+      if j < i then
+        if (balls[i].x - balls[j].x)/256*(balls[i].x - balls[j].x) + (balls[i].y - balls[j].y)/256*(balls[i].y - balls[j].y) < (balls[i].r + balls[j].r)/256*(balls[i].r + balls[j].r) then
+          balls[i].xdir = - balls[i].xdir
+          balls[j].xdir = - balls[j].xdir
+          balls[i].ydir = - balls[i].ydir
+          balls[j].ydir = - balls[j].ydir
+        end
+      end
+    end
+  end
 end
 
 --
