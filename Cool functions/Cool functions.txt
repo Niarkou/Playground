@@ -83,7 +83,7 @@ function crnd(min, max)
     return min + rnd(max-min)
 end
 
-function ccrnd(tab)
+function ccrnd(tab)  -- takes a tab and choose randomly between the elements of the table
   n = flr(crnd(1,#tab+1))
   return tab[n]
 end
