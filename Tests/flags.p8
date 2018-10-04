@@ -50,11 +50,16 @@ end
 --
 -- walls
 --
-
-function wall(x,y,w,h)
-  local s = mget((x+w)/8,(y+h)/8)
+local s = mget((x+w)/8,(y+h)/8)
   local t = mget((x-w)/8,(y-h)/8)
-    return fget(s),fget(t)
+
+function wall(x,y)
+  local is_wall = true
+  local s = mget(x/8, y/8)
+  if fget(s) == 1 then
+    is_wall = false
+  end
+  return is_wall
 end
 
 --
