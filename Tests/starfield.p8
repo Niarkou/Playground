@@ -42,7 +42,7 @@ function _update()
 
   foreach(smoke, function(circle)
     if circle.r < 20 then
-      circle.r += 0.1
+      circle.r += 0.5
     elseif circle.r >= 20 then
       circle.x = crnd(-5, 5)
       circle.y = crnd(0, 128)
@@ -75,8 +75,9 @@ function _draw()
     end end)
 
   foreach(smoke, function(circle)
-    fillp(0xa5a5.8)
-    circfill(circle.x, circle.y, circle.r, circle.col)
-    fillp()
-  end)
+    local p={0x0, 0x0, 0x5050, 0x5050, 0x5a5a, 0xfafa}
+      fillp(p[flr(circle.r * (#p - 1) / 20) + 1] + 0x.8)
+      circfill(circle.x, circle.y, circle.r, circle.col)
+      fillp()
+    end)
 end
