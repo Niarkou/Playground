@@ -75,9 +75,18 @@ function _draw()
     end end)
 
   foreach(smoke, function(circle)
+    if circle.col == 5 then
+      local p={0x0, 0x0, 0x5050, 0x5050, 0x5a5a, 0xfafa}
+      fillp(p[flr(circle.r * (#p - 1) / 20) + 1] + 0x.8)
+      circfill(circle.x + 6, circle.y, circle.r, circle.col)
+      fillp()
+    end end)
+
+  foreach(smoke, function(circle)
+    if circle.col == 6 then
     local p={0x0, 0x0, 0x5050, 0x5050, 0x5a5a, 0xfafa}
       fillp(p[flr(circle.r * (#p - 1) / 20) + 1] + 0x.8)
-      circfill(circle.x, circle.y, circle.r, circle.col)
+      circfill(circle.x - 2, circle.y, circle.r, circle.col)
       fillp()
-    end)
+    end end)
 end
