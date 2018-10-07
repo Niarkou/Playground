@@ -87,3 +87,12 @@ function ccrnd(tab)  -- takes a tab and choose randomly between the elements of 
   n = flr(crnd(1,#tab+1))
   return tab[n]
 end
+
+-- cool rectfill (centered, outlined)
+
+function crectfill(y0, y1, w, color1, color2)
+    local x0 = 64 - ((w / 2))
+    local x1 = 64 + ((w / 2) - 1)
+    rectfill(x0, y0, x1, y1, color1)
+    rect(x0, y0, x1, y1, color2)
+end
