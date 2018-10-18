@@ -45,8 +45,8 @@ function _update()
     if circle.r < 20 then
       circle.r += 0.5
     elseif circle.r >= 20 then
-      circle.x = crnd(-5, 5)
-      circle.y = crnd(0, 128)
+      circle.x = crnd(0, 128)
+      circle.y = crnd(123, 133)
       circle.r = crnd(0, 7)
       circle.col = ccrnd({5, 6})
     end end)
