@@ -5,48 +5,72 @@ __lua__
 #include ../escarlib/vec.lua
 
 function _init()
+    poke(0x5f2d, 1)
     pixels={}
     circles={}
+    click_pos=vec2(0,0)
+    click=false
+    gravity=vec2(0,0.1)
 
     for i=0,3 do
-        add(circles, {pos=vec2(rnd(127),rnd(127)),r=rnd(15)})
-    end
-
-    for i=0,39 do
-        local vx1=rnd(10)-5
-        local vy1=rnd(10)-5
-        local posi=vec2(rnd(127),rnd(127))
-        for i=1,#circles do
-            while in_circle(posi, circles[i]) do
-                posi=vec2(rnd(127),rnd(127))
-            end
-        end
-        add(pixels, {pos=posi, vel=normalize(vec2(vx1,vy1)), col=2})
+        add(circles, {pos=vec2(rnd(127),rnd(127)),r=rnd(10)+10})
     end
 end
 
 function _update()
+    player_click()
+
+    if click then
+        for i=1,5 do
+            local vx1=rnd(10)-5
+            local vy1=rnd(10)-5
+            click_valid=true
+            for i=1,#circles do
+                if in_circle(click_pos, circles[i]) then
+                    click_valid=false
+                end
+            end
+            if click_valid==true then  
+                add(pixels, {pos=click_pos, vel=normalize(vec2(vx1,vy1)), col=2, bounce=0})
+            end         
+        end
+        click=false
+        click_valid=true
+    end
+
     foreach(pixels, function(p)
         local x=p.pos.x
         local y=p.pos.y
 
+        p.vel+=gravity
         p.pos+=p.vel
+        p.bounce-=1
 
-        if p.pos.x<1 or p.pos.x>127 then
+        
+        if p.pos.x<10 or p.pos.x>117 then
             p.vel.x=-p.vel.x
+            p.pos.x=x
         end
-        if p.pos.y<1 or p.pos.y>127 then
+        if p.pos.y>127 then
             p.vel.y=-p.vel.y
+            p.pos.y=y
         end
 
-        for i=1,#circles do
-            if in_circle(p.pos,circles[i]) then
-                p.col+=1
-                local n=normalize(circles[i].pos-p.pos)
-                p.vel=p.vel-(2*(p.vel*n)*n)
-                p.pos.x=x
-                p.pos.y=y
-            end 
+        if p.bounce<1 then
+            for i=1,#circles do
+                if in_circle(p.pos,circles[i]) then
+                    p.col+=1
+                    local n=normalize(circles[i].pos-p.pos)
+                    p.vel=normalize(p.vel-(2*(p.vel*n)*n))*2
+                    p.pos.x=x
+                    p.pos.y=y
+                    p.bounce=3
+                end 
+            end
+
+            if p.pos.y>127 and length(p.vel)<0.05 then
+                del(pixels, p)
+            end
         end
     end)
 end
@@ -58,6 +82,13 @@ function in_circle(pos, circle)
     end
 end
 
+function player_click()
+    if stat(34) == 1 then
+        click_pos=vec2(stat(32),stat(33))
+        click=true
+    end
+end
+
 function _draw()
     cls(1)
     foreach(circles, function(c)
@@ -66,4 +97,16 @@ function _draw()
     foreach(pixels, function(p)
         pset(p.pos.x,p.pos.y,p.col)
     end)
+    spr(2,stat(32)-1,stat(33)-1)
+    print("pixels:"..#pixels, 10, 10, 7)
 end
+
+__gfx__
+00000000000000000500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000100005650000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000001110005765000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000011111005776500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000001110005777650000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000100005777750000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000005675500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000557500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
