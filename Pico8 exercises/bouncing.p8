@@ -13,7 +13,7 @@ function _init()
     gravity=vec2(0,0.1)
 
     for i=0,3 do
-        add(circles, {pos=vec2(rnd(127),rnd(127)),r=rnd(10)+10})
+        add(circles, {pos=vec2(rnd(127),rnd(127)),r=rnd(10)+10,vel=normalize(vec2(rnd(10)-5,rnd(10)-5))})
     end
 end
 
@@ -47,12 +47,13 @@ function _update()
         p.bounce-=1
 
         
-        if p.pos.x<10 or p.pos.x>117 then
+        if p.pos.x<0 or p.pos.x>127 then
             p.vel.x=-p.vel.x
             p.pos.x=x
         end
-        if p.pos.y>127 then
-            p.vel.y=-p.vel.y
+        if p.pos.y>128 then
+            p.vel.y=-p.vel.y*0.9
+            p.vel.x=p.vel.x*0.9
             p.pos.y=y
         end
 
@@ -68,9 +69,25 @@ function _update()
                 end 
             end
 
-            if p.pos.y>127 and length(p.vel)<0.05 then
+            if p.pos.y>126 and length(p.vel)<0.1 then
                 del(pixels, p)
             end
+        end
+    end)
+
+    foreach(circles, function(c)
+        local x=c.pos.x
+        local y=c.pos.y
+
+        c.pos+=c.vel
+        
+        if c.pos.x-c.r<0 or c.pos.x+c.r>128 then
+            c.vel.x=-c.vel.x
+            c.pos.x=x
+        end
+        if c.pos.y+c.r>128 or c.pos.y-c.r<0 then
+            c.vel.y=-c.vel.y
+            c.pos.y=y
         end
     end)
 end
