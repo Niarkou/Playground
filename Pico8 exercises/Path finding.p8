@@ -22,7 +22,8 @@ visited = {}
 todo = {encode(10,10)}
 next = {}
 dist = 0
-finish = encode(50,50)
+finish = encode(100,100)
+light = finish
 
 while #todo > 0 do
     for i = 1, #todo do
@@ -35,32 +36,29 @@ while #todo > 0 do
         local m={}
         m.x = flr(todo[i])
         m.y = todo[i]%1*256
-        if m.x < -1 or m.x > 128 then
-            break
-        elseif m.y < -1 or m.y > 128 then
-            break
-        end
-        
-        if not visited[encode(m.x+1,m.y)] then
-            del(next, encode(m.x+1,m.y))
-            add(next, encode(m.x+1,m.y))
-        end
-        if not visited[encode(m.x-1,m.y)] then
-            del(next, encode(m.x-1,m.y))
-            add(next, encode(m.x-1,m.y))
-        end
-        if not visited[encode(m.x,m.y+1)] then
-            del(next, encode(m.x,m.y+1))
-            add(next, encode(m.x,m.y+1))
-        end
-        if not visited[encode(m.x,m.y-1)] then
-            del(next, encode(m.x,m.y-1))
-            add(next, encode(m.x,m.y-1))
+
+        if m.x > -5 and m.x < 132 and m.y > -5 and m.y < 132 then
+            if not visited[encode(m.x+1,m.y)] then
+                del(next, encode(m.x+1,m.y))
+                add(next, encode(m.x+1,m.y))
+            end
+            if not visited[encode(m.x-1,m.y)] then
+                del(next, encode(m.x-1,m.y))
+                add(next, encode(m.x-1,m.y))
+            end
+            if not visited[encode(m.x,m.y+1)] then
+                del(next, encode(m.x,m.y+1))
+                add(next, encode(m.x,m.y+1))
+            end
+            if not visited[encode(m.x,m.y-1)] then
+                del(next, encode(m.x,m.y-1))
+                add(next, encode(m.x,m.y-1))
+            end
         end
         visited[todo[i]] = dist
     end
-    --print(#visited, 10,60)
-    --print(#todo, 10, 80)
+    --print(#visited)
+    --print(#todo)
     dist += 1
     todo = next
     next = {}
@@ -71,8 +69,8 @@ while dist>1 do
     local a={}
     local tolight={}
     local m={}
-    m.x = flr(finish)
-    m.y = finish%1*256
+    m.x = flr(light)
+    m.y = light%1*256
     if visited[encode(m.x+1,m.y)] == dist-1 then
         add(tolight, {x=m.x+1, y=m.y,8})
     end
@@ -87,5 +85,5 @@ while dist>1 do
     end
     a=tabrnd(tolight)
     pset(a.x,a.y,8)
-    finish = encode(a.x,a.y)
+    light = encode(a.x,a.y)
 end
