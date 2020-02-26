@@ -39,20 +39,16 @@ while #todo > 0 do
 
         if m.x > -5 and m.x < 132 and m.y > -5 and m.y < 132 then
             if not visited[encode(m.x+1,m.y)] then
-                del(next, encode(m.x+1,m.y))
-                add(next, encode(m.x+1,m.y))
+                next[encode(m.x+1,m.y)]=1
             end
             if not visited[encode(m.x-1,m.y)] then
-                del(next, encode(m.x-1,m.y))
-                add(next, encode(m.x-1,m.y))
+                next[encode(m.x-1,m.y)]=1
             end
             if not visited[encode(m.x,m.y+1)] then
-                del(next, encode(m.x,m.y+1))
-                add(next, encode(m.x,m.y+1))
+                next[encode(m.x,m.y+1)]=1
             end
             if not visited[encode(m.x,m.y-1)] then
-                del(next, encode(m.x,m.y-1))
-                add(next, encode(m.x,m.y-1))
+                next[encode(m.x,m.y-1)]=1
             end
         end
         visited[todo[i]] = dist
@@ -60,7 +56,10 @@ while #todo > 0 do
     --print(#visited)
     --print(#todo)
     dist += 1
-    todo = next
+    todo = {}
+    for k,v in pairs(next) do
+        add(todo,k)
+    end
     next = {}
 end
 --print(visited[finish], 20, 100)
