@@ -7,13 +7,19 @@ __lua__
 
 cls(0)
 rect={}
-for i = 1,8 do
-    local rectx0=crnd(25,90)
-    local recty0=crnd(25,90)
+for i = 1,30 do
+    local rectx0=crnd(0,128)
+    local recty0=crnd(0,128)
     local rectx1=rectx0+crnd(10,20)
     local recty1=recty0+crnd(10,20)
     rectfill(rectx0,recty0,rectx1,recty1,10)
-    add(rect, {x0=rectx0,y0=recty0,x1=rectx1,y1=recty1})
+end
+for i = 1,30 do
+    local rectx0=crnd(0,128)
+    local recty0=crnd(0,128)
+    local rectx1=rectx0+crnd(10,20)
+    local recty1=recty0+crnd(10,20)
+    rectfill(rectx0,recty0,rectx1,recty1,14)
 end
 
 function encode(x,y)
@@ -33,56 +39,69 @@ visited = {}
 todo={}
 todo[encode(8,8)]=1
 next = {}
-dist = 0
-finish = encode(120,120)
+fx=120
+fy=120
+finish = encode(fx,fy)
 light = finish
 
-while todo[finish]==nil do
+while visited[finish]==nil do
     for k,v in pairs(todo) do
         local m={}
         m.x = flr(k)
         m.y = k%1*256
         function addtonext(x,y)
-            if m.x > -5 and m.x < 132 and m.y > -5 and m.y < 132 then
-                if pget(x,y)!=10 then
-                    if not visited[encode(x,y)] then
-                        next[encode(x,y)]=1
-                    end
+            local val = 0
+            if pget(x,y)==10 then
+                val=v+3
+            elseif pget(x,y)==14 then
+                val=v+4
+            else
+                val=v+2
+            end
+
+            if m.x < 0 or m.x > 128 or m.y < 0 or m.y > 128 then
+                return
+            end   
+
+            if not visited[encode(x,y)] then
+                next[encode(x,y)]=val
+            else
+                if visited[encode(x,y)] > val then
+                    next[encode(x,y)]=val
                 end
             end
         end
+        
         addtonext(m.x+1,m.y)
         addtonext(m.x-1,m.y)
         addtonext(m.x,m.y+1)
         addtonext(m.x,m.y-1)
-        
-        visited[k] = dist
+        visited[k] = v
     end
-    --print(#visited)
-    --print(#todo)
-    dist += 1
     todo = next
     next = {}
 end
---print(visited[finish], 20, 100)
+
+dist = visited[finish]
+
 while dist>1 do 
     local a={}
-    local tolight={}
     local m={}
     m.x = flr(light)
     m.y = light%1*256
     function addtolight(x0,y0)
-        if visited[encode(x0,y0)] == dist-1 then
-            add(tolight, {x=x0, y=y0})
-        end 
+        if visited[encode(x0,y0)]!=nil then
+            if visited[encode(x0,y0)] < dist then
+                dist=visited[encode(x0,y0)]
+                a={x=x0, y=y0}
+            end 
+        end
     end
     addtolight(m.x+1,m.y)
     addtolight(m.x-1,m.y)
     addtolight(m.x,m.y+1)
     addtolight(m.x,m.y-1)
 
-    dist-=1
-    a=ccrnd(tolight)
     pset(a.x,a.y,8)
     light = encode(a.x,a.y)
 end
