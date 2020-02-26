@@ -46,18 +46,15 @@ while size(todo) > 0 do
         m.x = flr(k)
         m.y = k%1*256
         if m.x > -5 and m.x < 132 and m.y > -5 and m.y < 132 then
-            if not visited[encode(m.x+1,m.y)] then
-                next[encode(m.x+1,m.y)]=1
+            function addtonext(x,y)
+                if not visited[encode(x,y)] then
+                    next[encode(x,y)]=1
+                end
             end
-            if not visited[encode(m.x-1,m.y)] then
-                next[encode(m.x-1,m.y)]=1
-            end
-            if not visited[encode(m.x,m.y+1)] then
-                next[encode(m.x,m.y+1)]=1
-            end
-            if not visited[encode(m.x,m.y-1)] then
-                next[encode(m.x,m.y-1)]=1
-            end
+            addtonext(m.x+1,m.y)
+            addtonext(m.x-1,m.y)
+            addtonext(m.x,m.y+1)
+            addtonext(m.x,m.y-1)
         end
         visited[k] = dist
     end
@@ -75,18 +72,16 @@ while dist>1 do
     local m={}
     m.x = flr(light)
     m.y = light%1*256
-    if visited[encode(m.x+1,m.y)] == dist-1 then
-        add(tolight, {x=m.x+1, y=m.y,8})
+    function addtolight(x0,y0)
+        if visited[encode(x0,y0)] == dist-1 then
+            add(tolight, {x=x0, y=y0})
+        end 
     end
-    if visited[encode(m.x-1,m.y)] == dist-1 then
-        add(tolight, {x=m.x-1,y=m.y,8})
-    end
-    if visited[encode(m.x,m.y+1)] == dist-1 then
-        add(tolight, {x=m.x,y=m.y+1,8})
-    end
-    if visited[encode(m.x,m.y-1)] == dist-1 then
-        add(tolight, {x=m.x,y=m.y-1,8})
-    end
+    addtolight(m.x+1,m.y)
+    addtolight(m.x-1,m.y)
+    addtolight(m.x,m.y+1)
+    addtolight(m.x,m.y-1)
+
     a=tabrnd(tolight)
     pset(a.x,a.y,8)
     light = encode(a.x,a.y)
