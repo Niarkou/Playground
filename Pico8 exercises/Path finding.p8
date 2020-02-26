@@ -3,19 +3,12 @@ version 18
 __lua__
 
 #include ../escarlib/vec.lua
+#include ../escarlib/random.lua
+
 cls(0)
 function encode(x,y)
     n = x + y/256
     return n
-end
-
-function crnd(a, b)
-    return min(a, b) + rnd(abs(b - a))
-end
-
-function tabrnd(tab)
-    n = flr(crnd(1, #tab+1))
-    return tab[n]
 end
 
 function size(t)
@@ -82,7 +75,7 @@ while dist>1 do
     addtolight(m.x,m.y+1)
     addtolight(m.x,m.y-1)
 
-    a=tabrnd(tolight)
+    a=ccrnd(tolight)
     pset(a.x,a.y,8)
     light = encode(a.x,a.y)
 end
