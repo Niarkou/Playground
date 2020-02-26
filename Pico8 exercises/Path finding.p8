@@ -6,6 +6,16 @@ __lua__
 #include ../escarlib/random.lua
 
 cls(0)
+rect={}
+for i = 1,8 do
+    local rectx0=crnd(25,90)
+    local recty0=crnd(25,90)
+    local rectx1=rectx0+crnd(10,20)
+    local recty1=recty0+crnd(10,20)
+    rectfill(rectx0,recty0,rectx1,recty1,10)
+    add(rect, {x0=rectx0,y0=recty0,x1=rectx1,y1=recty1})
+end
+
 function encode(x,y)
     n = x + y/256
     return n
@@ -21,10 +31,10 @@ end
 
 visited = {}
 todo={}
-todo[encode(10,10)]=1
+todo[encode(8,8)]=1
 next = {}
 dist = 0
-finish = encode(100,100)
+finish = encode(120,120)
 light = finish
 
 while todo[finish]==nil do
@@ -34,16 +44,18 @@ while todo[finish]==nil do
         m.y = k%1*256
         function addtonext(x,y)
             if m.x > -5 and m.x < 132 and m.y > -5 and m.y < 132 then
-                if not visited[encode(x,y)] then
-                    next[encode(x,y)]=1
+                if pget(x,y)!=10 then
+                    if not visited[encode(x,y)] then
+                        next[encode(x,y)]=1
+                    end
                 end
             end
         end
-            addtonext(m.x+1,m.y)
-            addtonext(m.x-1,m.y)
-            addtonext(m.x,m.y+1)
-            addtonext(m.x,m.y-1)
-            
+        addtonext(m.x+1,m.y)
+        addtonext(m.x-1,m.y)
+        addtonext(m.x,m.y+1)
+        addtonext(m.x,m.y-1)
+        
         visited[k] = dist
     end
     --print(#visited)
@@ -74,5 +86,5 @@ while dist>1 do
     pset(a.x,a.y,8)
     light = encode(a.x,a.y)
 end
-pset(10,10,12)
-pset(100,100,12)
+pset(8,8,12)
+pset(120,120,12)
